@@ -5,8 +5,10 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/tendermint/tendermint/types"
+	"time"
+
 	dbm "github.com/tendermint/tendermint/libs/db"
+	"github.com/tendermint/tendermint/types"
 )
 
 //-----------------------------------------------------
@@ -32,6 +34,12 @@ func validateBlock(stateDB dbm.DB, state State, block *types.Block) error {
 			return errors.New("Invalid Block.Header.Time")
 		}
 	*/
+	if !block.Time.After(state.LastBlockTime) {
+		return errors.New("Invalid Block.Header.Time: before last block time")
+	}
+	if block.Time.After(time.Now().Add(time.Millisecond)) {
+		return errors.New("Invalid Block.Header.Time: future block time")
+	}
 
 	// validate prev block info
 	if !block.LastBlockID.Equals(state.LastBlockID) {
