@@ -34,9 +34,12 @@ func validateBlock(stateDB dbm.DB, state State, block *types.Block) error {
 			return errors.New("Invalid Block.Header.Time")
 		}
 	*/
-	if !block.Time.After(state.LastBlockTime) {
-		return errors.New("Invalid Block.Header.Time: before last block time")
+	if state.LastBlockHeight > 0 {
+		if !block.Time.After(state.LastBlockTime) {
+			return errors.New("Invalid Block.Header.Time: before last block time")
+		}
 	}
+
 	if block.Time.After(time.Now().Add(time.Millisecond)) {
 		return errors.New("Invalid Block.Header.Time: future block time")
 	}
