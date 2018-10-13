@@ -40,7 +40,7 @@ func validateBlock(stateDB dbm.DB, state State, block *types.Block) error {
 		}
 	}
 
-	if block.Time.After(time.Now().Add(time.Second * 3)) {
+	if block.Time.After(time.Now().Add(time.Second * 5)) {
 		return errors.New("Invalid Block.Header.Time: future block time")
 	}
 
